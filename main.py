@@ -19,15 +19,17 @@ dp = Dispatcher()
 @dp.message(CommandStart())
 async def cmd_start(message: types.Message):
   builder = InlineKeyboardBuilder()
-  builder.add(
-      types.InlineKeyboardButton(
-          text="📥 Получить чит", callback_data="get_cheat"
-      )
+  # Кнопка получения файла
+  builder.button(text="📥 Получить чит", callback_data="get_cheat")
+  # Кнопка связи / помощи (ведет на твой Telegram)
+  builder.button(
+      text="💬 Поддержка / Помощь", url="https://t.me/fitjgjgkdsfdsf54y54teo7i8yher9t8"
   )
+  builder.adjust(1)  кнопки друг под другом
 
   await message.answer(
       "Привет! Это официальный бот проекта **VanishCRACK**.\n\nНажми кнопку"
-      " ниже, чтобы получить архив с читом:",
+      " ниже, чтобы получить архив с читом или связаться по вопросам:",
       reply_markup=builder.as_markup(),
       parse_mode="Markdown",
   )
@@ -35,17 +37,24 @@ async def cmd_start(message: types.Message):
 
 @dp.callback_query(lambda c: c.data == "get_cheat")
 async def process_callback_cheat(callback: types.CallbackQuery):
-  # Точное имя файла с учетом заглавной буквы, как на GitHub
+  # Логируем в консоль Render/ПК информацию о том, кто скачал чит
+  user = callback.from_user
+  print(
+      f"[LOG] Пользователь @{user.username} (ID: {user.id}, Имя:"
+      f" {user.first_name}) нажал кнопку и скачал чит!"
+  )
+
   file_path = "Cheat.zip"
 
-  # Текст инструкции, который отправляется вместе с файлом
   instruction_text = (
       "📥 **Вот твой архив с читом!**\n\n"
       "📋 **Как установить и запустить:**\n"
       "1. Скачай архив `Cheat.zip`.\n"
       "2. Распакуй его содержимое в удобную папку на компьютере.\n"
       "3. Прочитай текстовый файл с инструкцией внутри архива.\n"
-      "4. Запусти приложение и следуй подсказкам на экране. 🚀"
+      "4. Запусти приложение и следуй подсказкам на экране. 🚀\n\n"
+      "❓ Возникли проблемы? Напиши в поддержку: "
+      "@fitjgjgkdsfdsf54y54teo7i8yher9t8"
   )
 
   if os.path.exists(file_path):
