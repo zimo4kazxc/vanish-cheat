@@ -35,13 +35,14 @@ async def cmd_start(message: types.Message):
 
 @dp.callback_query(lambda c: c.data == "get_cheat")
 async def process_callback_cheat(callback: types.CallbackQuery):
-  file_path = "cheat.zip"
+  # Точное имя файла с учетом заглавной буквы, как на GitHub
+  file_path = "Cheat.zip"
 
-  # Текст инструкции, который будет отправляться вместе с файлом
+  # Текст инструкции, который отправляется вместе с файлом
   instruction_text = (
       "📥 **Вот твой архив с читом!**\n\n"
       "📋 **Как установить и запустить:**\n"
-      "1. Скачай архив `cheat.zip`.\n"
+      "1. Скачай архив `Cheat.zip`.\n"
       "2. Распакуй его содержимое в удобную папку на компьютере.\n"
       "3. Прочитай текстовый файл с инструкцией внутри архива.\n"
       "4. Запусти приложение и следуй подсказкам на экране. 🚀"
@@ -54,7 +55,7 @@ async def process_callback_cheat(callback: types.CallbackQuery):
     )
   else:
     await callback.message.answer(
-        "⚠️ Ошибка: файл `cheat.zip` пока не загружен в репозиторий на GitHub!"
+        "⚠️ Ошибка: файл `Cheat.zip` не найден на сервере!"
     )
 
   await callback.answer()
