@@ -10,7 +10,7 @@ from aiogram.types import FSInputFile
 logging.basicConfig(level=logging.INFO)
 
 # Твой токен бота
-TOKEN = "9209314583:AAHwGZ5T02pI-40q9N7o0o7sM3F8pQ2x5qQ"  # или оставь свою строку с токеном
+TOKEN = "9209314583:AAF2aEMK1lQrDkJJi-EXMGlx6ZPtHewKvU4"  # или оставь свою строку с токеном
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
