@@ -25,7 +25,7 @@ async def cmd_start(message: types.Message):
   builder.button(
       text="💬 Поддержка / Помощь", url="https://t.me/fitjgjgkdsfdsf54y54teo7i8yher9t8"
   )
-  builder.adjust(1)  кнопки друг под другом
+  builder.adjust(1)  # Располагаем кнопки друг под другом
 
   await message.answer(
       "Привет! Это официальный бот проекта **VanishCRACK**.\n\nНажми кнопку"
@@ -37,7 +37,7 @@ async def cmd_start(message: types.Message):
 
 @dp.callback_query(lambda c: c.data == "get_cheat")
 async def process_callback_cheat(callback: types.CallbackQuery):
-  # Логируем в консоль Render/ПК информацию о том, кто скачал чит
+  # Логируем в консоль информацию о том, кто скачал чит
   user = callback.from_user
   print(
       f"[LOG] Пользователь @{user.username} (ID: {user.id}, Имя:"
