@@ -5,6 +5,7 @@ import sys
 from aiohttp import web
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
+from aiogram.types import FSInputFile
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 # Токен твоего бота
@@ -17,7 +18,6 @@ dp = Dispatcher()
 
 @dp.message(CommandStart())
 async def cmd_start(message: types.Message):
-  # Создаем клавиатуру с помощью InlineKeyboardBuilder (импортирован правильно)
   builder = InlineKeyboardBuilder()
   builder.add(
       types.InlineKeyboardButton(
@@ -27,7 +27,7 @@ async def cmd_start(message: types.Message):
 
   await message.answer(
       "Привет! Это официальный бот проекта **VanishCRACK**.\n\nНажми кнопку"
-      " ниже, чтобы получить доступ к файлу:",
+      " ниже, чтобы получить архив с читом:",
       reply_markup=builder.as_markup(),
       parse_mode="Markdown",
   )
@@ -35,14 +35,32 @@ async def cmd_start(message: types.Message):
 
 @dp.callback_query(lambda c: c.data == "get_cheat")
 async def process_callback_cheat(callback: types.CallbackQuery):
-  await callback.message.answer(
-      "Вот твой файл с читом! Не забудь отключить антивирус перед"
-      " распаковкой. 🛡"
+  file_path = "cheat.zip"
+
+  # Текст инструкции, который будет отправляться вместе с файлом
+  instruction_text = (
+      "📥 **Вот твой архив с читом!**\n\n"
+      "📋 **Как установить и запустить:**\n"
+      "1. Скачай архив `cheat.zip`.\n"
+      "2. Распакуй его содержимое в удобную папку на компьютере.\n"
+      "3. Прочитай текстовый файл с инструкцией внутри архива.\n"
+      "4. Запусти приложение и следуй подсказкам на экране. 🚀"
   )
+
+  if os.path.exists(file_path):
+    document = FSInputFile(file_path)
+    await callback.message.answer_document(
+        document, caption=instruction_text, parse_mode="Markdown"
+    )
+  else:
+    await callback.message.answer(
+        "⚠️ Ошибка: файл `cheat.zip` пока не загружен в репозиторий на GitHub!"
+    )
+
   await callback.answer()
 
 
-# --- Веб-сервер для Render (чтобы бот не засыпал и не было ошибок порта) ---
+# --- Веб-сервер для Render (предотвращает засыпание бота) ---
 async def handle(request):
   return web.Response(text="VanishCRACK Bot is alive and running 24/7!")
 
@@ -53,7 +71,6 @@ async def start_web_server():
   runner = web.AppRunner(app)
   await runner.setup()
 
-  # Render передает порт через переменную окружения PORT (по умолчанию 10000)
   port = int(os.getenv("PORT", 10000))
   site = web.TCPSite(runner, "0.0.0.0", port)
   await site.start()
@@ -61,9 +78,7 @@ async def start_web_server():
 
 
 async def main():
-  # Запускаем веб-сервер параллельно с ботом
   await start_web_server()
-  # Запуск поллинга сообщений
   await dp.start_polling(bot)
 
 
